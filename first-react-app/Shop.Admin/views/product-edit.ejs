@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="/styles.css">
+<h1>Редактировать товар: <%= product.title %></h1>
+<form method="POST" action="/admin/<%= product.id %>/save">
+  <h2>Похожие товары</h2>
+  <% similar.forEach(s => { %>
+    <div>
+      <label>
+        <input type="checkbox" name="removeSimilar" value="<%= s.id %>">
+        <%= s.title %> (цена: <%= s.price %>)
+      </label>
+    </div>
+  <% }) %>
+  <h2>Остальные товары</h2>
+  <% others.forEach(o => { %>
+    <div>
+      <label>
+        <input type="checkbox" name="addSimilar" value="<%= o.id %>">
+        <%= o.title %> (цена: <%= o.price %>)
+      </label>
+    </div>
+  <% }) %>
+  <button type="submit">Сохранить изменения</button>
+</form>
+<a href="/admin">Назад к списку</a>

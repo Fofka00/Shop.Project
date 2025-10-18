@@ -1,0 +1,10 @@
+<link rel="stylesheet" href="/styles.css">
+<h1>Товары</h1>
+<a href="/admin/new-product">Добавить товар</a>
+<ul>
+  <% products.forEach(p => { %>
+    <li>
+      <a href="/admin/<%= p.id || p.product_id %>"><%= p.title %></a>
+    </li>
+  <% }) %>
+</ul>
