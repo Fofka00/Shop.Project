@@ -16,6 +16,6 @@
     "typescript": "^5.9.2"
   },
   "scripts": {
-    "dev": "nodemon start.ts"
+    "dev": "nodemon"
   }
 }
