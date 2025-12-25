@@ -318,19 +318,11 @@ productsRouter.patch('/:id', async (
 
 productsRouter.get(
   '/similar/:id',
-  [
-    param('id').isUUID().withMessage('Product id is not UUID')
-  ],
   async (
     req: Request<{ id: string }>,
     res: Response
   ) => {
     try {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-      }
-
       const originProduct = req.params.id;
 
       const [rows] = await connection.query<ISimilarProductEntity[] & RowDataPacket[]>(
@@ -342,27 +334,26 @@ productsRouter.get(
         return res.send([]);
       }
 
-      const similarProductsIds = rows.map(({ first_product, second_product }) => {
-        return first_product === originProduct ? second_product : first_product;
-      });
+      const similarProductsIds = rows.map(({ first_product, second_product }) =>
+        first_product === originProduct ? second_product : first_product
+      );
 
       const [similarProducts] = await connection.query<IProductEntity[] & RowDataPacket[]>(
         "SELECT * FROM products WHERE product_id IN (?)",
         [similarProductsIds]
       );
 
-      const productsList: IProduct[] = similarProducts.map(({product_id, ...rest}) => {
-        return {
-          id: product_id,
-          ...rest
-        }
-      });
+      const productsList: IProduct[] = similarProducts.map(({ product_id, ...rest }) => ({
+        id: product_id,
+        ...rest,
+      }));
 
       res.send(productsList);
     } catch (e) {
-      throwServerError(res, e);
+      throwServerError(res, e as Error);
     }
-  });
+  }
+);
 
 productsRouter.post(
   '/add-similar',

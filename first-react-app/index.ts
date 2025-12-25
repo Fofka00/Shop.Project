@@ -1,4 +1,4 @@
-import express, { Express } from "express";
+import express, { Express, Request, Response } from "express";
 import path from "path";
 import { Connection } from "mysql2/promise";
 import { initDataBase } from "./Server/services/db";
@@ -20,7 +20,11 @@ export default async (): Promise<Express> => {
 
   app.use(express.static(clientBuildPath));
 
-  app.get("/", (_, res) => {
+  app.get("/", (_: Request, res: Response) => {
+    res.sendFile(path.join(clientBuildPath, "index.html"));
+  });
+
+  app.get("/", (_: Request, res: Response) => {
     res.sendFile(path.join(clientBuildPath, "index.html"));
   });
 

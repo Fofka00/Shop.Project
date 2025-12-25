@@ -158,22 +158,22 @@ export const validateAddSimilarProductsBody = (items: AddSimilarProductsPayload 
     throw new Error("An array is empty");
   }
 
-  items?.forEach((connection: [string, string], index) => {
-    if (connection?.length !== 2 || typeof connection?.[0] !== "string" || typeof connection?.[1] !== "string") {
+  items.forEach((connection, index) => {
+    if (!Array.isArray(connection) || connection.length !== 2) {
       throw new Error(`An array element with index ${index} doesn't match a pair of ids`);
     }
 
-    if (!isUUID(connection[0])) {
-      throw new Error(`Value ${connection[0]} of the element with index ${index} is not UUID`);
+    const [first, second] = connection;
+    if (typeof first !== "string" || !first.length) {
+      throw new Error(`Value ${first} of the element with index ${index} is not valid id`);
     }
-
-    if (!isUUID(connection[1])) {
-      throw new Error(`Value ${connection[1]} of the element with index ${index} is not UUID`);
+    if (typeof second !== "string" || !second.length) {
+      throw new Error(`Value ${second} of the element with index ${index} is not valid id`);
     }
   });
 
   return true;
-}
+};
 
 export const validateRemoveSimilarProductsBody = (items: string[] = []): boolean => {
   if (!Array.isArray(items)) {
@@ -184,11 +184,11 @@ export const validateRemoveSimilarProductsBody = (items: string[] = []): boolean
     throw new Error("An array is empty");
   }
 
-  items?.forEach((id: string, index) => {
-    if (!isUUID(id)) {
-      throw new Error(`Value ${id} with index ${index} is not UUID`);
+  items.forEach((id, index) => {
+    if (typeof id !== "string" || !id.length) {
+      throw new Error(`Value ${id} with index ${index} is not valid id`);
     }
   });
 
   return true;
-}
+};

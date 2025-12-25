@@ -16,21 +16,42 @@ const ProductPage: React.FC = () => {
   const [commentLoading, setCommentLoading] = useState(false);
   const [commentError, setCommentError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (!id) return;
-    setLoading(true);
-    Promise.all([
-      fetchProduct(id),
-      fetchSimilarProducts(id),
-      fetchProductComments(id)
-    ]).then(([prod, sim, comms]) => {
-      console.log('Комментарии:', comms);
+useEffect(() => {
+  if (!id) return;
+
+  setLoading(true);
+
+  const load = async () => {
+    try {
+      const prod = await fetchProduct(id);
       setProduct(prod);
-      setSimilar(sim);
-      setComments(comms);
+
+      try {
+        const sim = await fetchSimilarProducts(id);
+        setSimilar(sim);
+      } catch (e) {
+        console.error('Error loading similar products:', e);
+        setSimilar([]); 
+      }
+
+      try {
+        const comms = await fetchProductComments(id);
+        setComments(comms);
+      } catch (e) {
+        console.error('Error loading comments:', e);
+        setComments([]);
+      }
+
+    } catch (e) {
+      console.error('Error loading product:', e);
+      setProduct(null);
+    } finally {
       setLoading(false);
-    });
-  }, [id]);
+    }
+  };
+
+  load();
+}, [id]);
 
   const handleCommentChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setCommentForm({ ...commentForm, [e.target.name]: e.target.value });

@@ -5,7 +5,7 @@
 npm install
 
 запуск:
-nodemon start.ts
+npm run dev
 Сервер должен стартовать на http://localhost:3000.
 
 
@@ -29,5 +29,5 @@ node app.js
 npm install
 
 запуск:
-npm start
+npm run build
 Сервер должен стартовать на http://localhost:3001.
