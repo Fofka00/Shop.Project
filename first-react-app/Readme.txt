@@ -5,7 +5,7 @@
 npm install
 
 запуск:
-npm start
+npm run dev
 Сервер должен стартовать на http://localhost:3000.
 
 
